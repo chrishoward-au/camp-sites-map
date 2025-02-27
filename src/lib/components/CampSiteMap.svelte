@@ -11,7 +11,6 @@
 	import SettingsPanel from '$lib/components/SettingsPanel.svelte';
 	import RouteInfoDialog from '$lib/components/RouteInfoDialog.svelte';
 	import mapboxgl from 'mapbox-gl';
-	import 'mapbox-gl/dist/mapbox-gl.css';
 
 	const dispatch = createEventDispatcher();
 	const mapboxToken = import.meta.env.PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -62,9 +61,9 @@
 		return `
 			<div class="route-info p-2 bg-transparent">
 				<div class="route-locations mb-2">
-					<div class="text-sm font-medium text-gray-700">
-						<span class="text-green-600">${startLocationName} </span>
-						to <span class="text-red-600">${endLocationName}</span>
+					<div class="text-sm font-medium text-gray-700 dark:text-gray-200">
+						<span class="text-green-600"><i class="fa-solid fa-location-dot"></i></span> ${startLocationName} 
+						to <span class="text-red-600"><i class="fa-solid fa-location-dot"></i></span> ${endLocationName}
 					</div>
 				</div>
 				<div class="travel-modes flex gap-2 mt-2 text-lg">
@@ -93,7 +92,7 @@
 						<i class="fa-solid fa-car"></i>
 					</button>
 				</div>
-				<p class="text-gray-700 dark:text-gray-700">${content}</p>
+				<p class="text-gray-700 dark:text-gray-200">${content}</p>
 			</div>
 		`;
 	}
@@ -266,7 +265,7 @@
       ${site.name ? `<h3 class="text-gray-800 dark:text-gray-100">${site.name}</h3>` : ''}
       ${site.description ? `<p class="text-gray-800 dark:text-gray-100">${site.description}</p>` : ''}
       <div class="popup-buttons">
-									<Button size="sm" class="route-btn" id="route-action-btn-${site.id}">
+									<Button size="sm" class="btn route-btn" id="route-action-btn-${site.id}">
 										${isStartButton ? 'Start Route' : 'End Route'}
 									</Button>
         </div>
