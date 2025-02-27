@@ -15,10 +15,10 @@
   const baseClasses = 'inline-flex items-center justify-center transition-colors duration-200 focus:outline-none';
   
   const variantClasses = {
-    primary: '.btn.primary',
-    secondary: '.btn.secondary',
-    icon: '.btn.icon',
-    menu: '.btn.menu',
+    primary: 'btn primary',
+    secondary: 'btn secondary',
+    icon: 'btn icon',
+    menu: 'btn menu',
   };
   
   const sizeClasses = {

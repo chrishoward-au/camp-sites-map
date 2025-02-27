@@ -195,8 +195,8 @@
 				<input type="text" id="site-title" placeholder="Site Title" class="site-input dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
 				<textarea id="site-description" placeholder="Site Description" class="site-input dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"></textarea>
 				<div class="popup-buttons">
-					<button id="confirm-add" class="btn confirm-btn">Add Site</button>
-					<button id="cancel-add" class="btn cancel-btn">Cancel</button>
+					<button id="confirm-add" class="btn confirm">Add Site</button>
+					<button id="cancel-add" class="btn cancel">Cancel</button>
 				</div>
 			</div>
 		`;
@@ -265,7 +265,7 @@
       ${site.name ? `<h3 class="text-gray-800 dark:text-gray-100">${site.name}</h3>` : ''}
       ${site.description ? `<p class="text-gray-800 dark:text-gray-100">${site.description}</p>` : ''}
       <div class="popup-buttons">
-									<Button size="sm" class="btn route-btn" id="route-action-btn-${site.id}">
+									<Button size="sm" class="btn primary route-btn" id="route-action-btn-${site.id}">
 										${isStartButton ? 'Start Route' : 'End Route'}
 									</Button>
         </div>
