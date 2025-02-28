@@ -62,8 +62,8 @@
 			<div class="route-info p-2 bg-transparent">
 				<div class="route-locations mb-2">
 					<div class="text-sm font-medium text-gray-700 dark:text-gray-200">
-						<span class="text-green-600"><i class="fa-solid fa-location-dot"></i></span> ${startLocationName} 
-						to <span class="text-red-600"><i class="fa-solid fa-location-dot"></i></span> ${endLocationName}
+						<span class="text-green-600"><i class="fa-solid fa-location-dot"></i></span> ${startLocationName}<br>
+						<span class="text-red-600"><i class="fa-solid fa-location-dot"></i></span> ${endLocationName}
 					</div>
 				</div>
 				<div class="travel-modes flex gap-2 mt-2 text-lg">
