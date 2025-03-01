@@ -12,13 +12,13 @@
   export let className = '';
   export let selected = false;
   
-  const baseClasses = 'inline-flex items-center justify-center transition-colors duration-200 focus:outline-none';
+  const baseClasses = 'btn inline-flex items-center justify-center transition-colors duration-200 focus:outline-none';
   
   const variantClasses = {
-    primary: 'btn primary',
-    secondary: 'btn secondary',
-    icon: 'btn icon',
-    menu: 'btn menu',
+    primary: 'btn btn-primary',
+    secondary: 'btn btn-secondary',
+    icon: 'btn btn-icon',
+    menu: 'btn btn-menu',
   };
   
   const sizeClasses = {
@@ -46,7 +46,7 @@
     ${fullWidth ? 'w-full' : ''}
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
     ${className}
-    
+    ${selected ? 'btn-active' : ''}
   `;
 </script>
 

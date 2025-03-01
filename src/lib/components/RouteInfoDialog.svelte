@@ -2,6 +2,8 @@
     import { onMount, onDestroy, createEventDispatcher } from 'svelte';
     import { browser } from '$app/environment';
     
+    import RouteInfo from '$lib/components/RouteInfo.svelte';
+    
     export let title = "Route Information";
     export let content = "";
     export let isVisible = false;

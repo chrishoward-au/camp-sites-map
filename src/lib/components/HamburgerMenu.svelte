@@ -3,6 +3,8 @@
   import { settings } from '$lib/stores/settings.js';
   import { getCurrentLocation } from '$lib/utils.js';
   import Button from './Button.svelte';
+  import Dock from './Dock.svelte';
+	import ButtonGroup from './ButtonGroup.svelte';
 
   export let map;
 
@@ -38,8 +40,8 @@
   }
 </script>
 
-<div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 z-30 w-full bg-white dark:bg-gray-700 shadow-lg">
-  <div class="flex justify-center gap-2 py-0">
+<Dock >
+  <ButtonGroup> 
     <Button
       variant="menu"
       on:click={gotoCurrentLocation}
@@ -64,7 +66,7 @@
       variant="menu"
       on:click={handleTemperaturesLayer}
       title={`${showTemperatures ? 'Hide' : 'Show'} Location Temperatures`}
-      icon="fa-solid fa-cloud"
+      icon="fa-solid fa-cloud-sun"
       selected={showTemperatures}
     />
     <Button
@@ -74,5 +76,5 @@
       icon="fa-solid fa-gear"
       selected={false}
     />
-  </div>
-</div>
+  </ButtonGroup>
+</Dock>

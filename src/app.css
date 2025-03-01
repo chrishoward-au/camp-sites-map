@@ -1,5 +1,7 @@
 @import 'tailwindcss';
-
+@plugin "daisyui" {
+    themes: corporate --default, dark --prefersdark;
+  }
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Make sure the map container is full size */
@@ -141,45 +143,16 @@ textarea.site-input {
 }
 
 /* GLOBAL STYLES */
+
 .btn {
-    @apply px-4 py-1 rounded-sm bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white focus:outline-none;
+    @apply bg-transparent border-0 text-base-content dark:text-base-100 
+    hover:bg-primary hover:text-white
+    
+}
+.btn-active {
+    @apply bg-primary text-white;
 }
 
-.btn.primary {
-    @apply  bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white;
-}
-
-.btn.confirm {
-    @apply  bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white;
-}
-
-.btn.secondary {
-    @apply  bg-gray-600 hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600 text-white;
-}
-
-.btn.cancel {
-    @apply  bg-gray-600 hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600 text-white;
-}
-
-.btn.icon {
-    @apply rounded-md bg-transparent;
-}
-
-.btn.menu {
-    @apply p-1 bg-transparent;
-}
-
-.btn.menu.full-width {
-    @apply w-full;
-}
-
-.icon {
-    @apply p-2 rounded-md bg-transparent text-gray-700 dark:text-gray-200 hover:text-gray-100 hover:dark:text-gray-100 hover:bg-blue-600 hover:dark:bg-blue-500;
-}
-
-.icon.selected {
-    @apply text-gray-100 dark:text-gray-100 bg-blue-600 dark:bg-blue-500;
-}
 
 /* Floating dialog styles */
 .floating-dialog {

@@ -11,6 +11,7 @@
 	import SettingsPanel from '$lib/components/SettingsPanel.svelte';
 	import RouteInfoDialog from '$lib/components/RouteInfoDialog.svelte';
 	import mapboxgl from 'mapbox-gl';
+	import RouteInfo from '$lib/components/RouteInfo.svelte';
 
 	const dispatch = createEventDispatcher();
 	const mapboxToken = import.meta.env.PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -50,52 +51,7 @@
 	const DEFAULT_LNG = 146.8884086608887;
 	const DEFAULT_STYLE = 'mapbox://styles/mapbox/streets-v12';
 
-	/**
-	 * Returns a template for the route information popup.
-	 * @param {string} mode - The travel mode.
-	 * @param {string} content - The content to display in the popup.
-	 * @param {number} activeIndex - The index of the active route.
-	 * @returns {string} The HTML template for the popup.
-	 */
-	function getRouteInfoTemplate(mode, content, activeIndex = 0) {
-		return `
-			<div class="route-info p-2 bg-transparent">
-				<div class="route-locations mb-2">
-					<div class="text-sm font-medium text-gray-700 dark:text-gray-200">
-						<span class="text-green-600"><i class="fa-solid fa-location-dot"></i></span> ${startLocationName}<br>
-						<span class="text-red-600"><i class="fa-solid fa-location-dot"></i></span> ${endLocationName}
-					</div>
-				</div>
-				<div class="travel-modes flex gap-2 mt-2 text-lg">
-					<button 
-						class="travel-mode-btn inline-flex items-center justify-center transition-colors duration-200 focus:outline-none rounded-md p-2 
-						${mode === 'foot' ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200'}"
-						data-mode="foot"
-						title="Walking"
-					>
-						<i class="fa-solid fa-person-walking"></i>
-					</button>
-					<button 
-						class="travel-mode-btn inline-flex items-center justify-center transition-colors duration-200 focus:outline-none rounded-md p-2
-						${mode === 'bike' ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200'}"
-						data-mode="bike"
-						title="Cycling"
-					>
-						<i class="fa-solid fa-bicycle"></i>
-					</button>
-					<button 
-						class="travel-mode-btn inline-flex items-center justify-center transition-colors duration-200 focus:outline-none rounded-md p-2
-						${mode === 'car' ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200'}"
-						data-mode="car"
-						title="Driving"
-					>
-						<i class="fa-solid fa-car"></i>
-					</button>
-				</div>
-				<p class="text-gray-700 dark:text-gray-200">${content}</p>
-			</div>
-		`;
-	}
+	
 
 	/**
 	 * Initializes the map with the given position.
@@ -265,7 +221,7 @@
       ${site.name ? `<h3 class="text-gray-800 dark:text-gray-100">${site.name}</h3>` : ''}
       ${site.description ? `<p class="text-gray-800 dark:text-gray-100">${site.description}</p>` : ''}
       <div class="popup-buttons">
-									<Button size="sm" class="btn primary route-btn" id="route-action-btn-${site.id}">
+									<Button size="sm" class="btn btn-primary route-btn" id="route-action-btn-${site.id}">
 										${isStartButton ? 'Start Route' : 'End Route'}
 									</Button>
         </div>
@@ -430,6 +386,10 @@
 				// Draw the new route
 				currentRouteLayer = await drawRoute(map, data.routes[activeRouteIndex].geometry);
 				console.log('currentRouteLayer:', currentRouteLayer);
+
+				console.log('Routes:', data.routes);
+				console.log('Active route index:', activeRouteIndex);
+				console.log('Routes count:', data.routes.length);
 
 				// Check if currentRouteLayer is defined
 				if (currentRouteLayer) {
@@ -916,6 +876,10 @@
 		console.log('Color match:', match.maxTemp.toString());
 
 		return match ? match.maxTemp.toString() : 'na'; // Default color
+	}
+
+	function getRouteInfoTemplate(mode, content, activeIndex = 0) {
+		return `<RouteInfo mode="${mode}" content="${content}" startLocationName="${startLocationName}" endLocationName="${endLocationName}" activeIndex="${activeIndex}" />`;
 	}
 </script>
 
