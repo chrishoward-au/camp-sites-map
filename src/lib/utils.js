@@ -71,56 +71,89 @@ export async function getCurrentLocation(map, settings) {
     }
 }
 
-export async function drawRoute(map, routeGeometry) {
-  // Create a new source for the route
-  const sourceId = 'route-' + Date.now(); // Generate unique ID to prevent conflicts
+/**
+ * Efficiently draws or updates a route on the map.
+ * @param {Object} map - The Mapbox map instance.
+ * @param {Object} routeGeometry - The GeoJSON geometry for the route.
+ * @param {string} [routeId] - Optional ID for the route, defaults to 'route'.
+ * @returns {Object} A wrapper object for the route layer with helper methods.
+ */
+export async function drawRoute(map, routeGeometry, routeId = 'route') {
+  // Create consistent IDs based on the routeId
+  const sourceId = routeId;
+  const layerId = `${routeId}-layer`;
   
-  // Remove existing route source and layer if they exist
-  if (map.getLayer('route-layer')) {
-    map.removeLayer('route-layer');
-  }
-  if (map.getSource('route')) {
-    map.removeSource('route');
-  }
-  
-  map.addSource('route', {
-    type: 'geojson',
-    data: routeGeometry
-  });
-
-  // Add the line layer to the map
-  map.addLayer({
-    id: 'route-layer',
-    type: 'line',
-    source: 'route',
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round'
-    },
-    paint: {
-      'line-color': '#4A90E2',
-      'line-width': 5,
-      'line-opacity': 0.7
+  // Check if the source already exists
+  if (map.getSource(sourceId)) {
+    // Update the existing source data instead of removing and recreating
+    map.getSource(sourceId).setData(routeGeometry);
+  } else {
+    // Source doesn't exist, create it
+    // First check if we need to remove the layer
+    if (map.getLayer(layerId)) {
+      map.removeLayer(layerId);
     }
-  });
+    
+    // Add the source
+    map.addSource(sourceId, {
+      type: 'geojson',
+      data: routeGeometry
+    });
+
+    // Add the line layer to the map
+    map.addLayer({
+      id: layerId,
+      type: 'line',
+      source: sourceId,
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round'
+      },
+      paint: {
+        'line-color': '#4A90E2',
+        'line-width': 5,
+        'line-opacity': 0.7
+      }
+    });
+  }
 
   // Create a wrapper object with getBounds method
   const routeLayer = {
+    id: routeId,
+    sourceId,
+    layerId,
     on: (event, callback) => {
       // Add event listener to the route layer
-      map.on(event, 'route-layer', callback);
+      map.on(event, layerId, callback);
     },
     remove: () => {
       // Remove the route layer and source
-      if (map.getLayer('route-layer')) {
-        map.removeLayer('route-layer');
+      if (map.getLayer(layerId)) {
+        map.removeLayer(layerId);
       }
-      if (map.getSource('route')) {
-        map.removeSource('route');
+      if (map.getSource(sourceId)) {
+        map.removeSource(sourceId);
       }
     },
+    update: (newGeometry) => {
+      // Update the route data without recreating the layer
+      if (map.getSource(sourceId)) {
+        map.getSource(sourceId).setData(newGeometry);
+        return true;
+      }
+      return false;
+    },
     getBounds: () => {
-      // Calculate bounds from route geometry
+      // Use the LngLatBounds utility from Mapbox if available
+      if (window.mapboxgl && window.mapboxgl.LngLatBounds) {
+        const bounds = new window.mapboxgl.LngLatBounds();
+        routeGeometry.coordinates.forEach(coord => {
+          bounds.extend([coord[0], coord[1]]);
+        });
+        return bounds.toArray();
+      }
+      
+      // Fallback to manual calculation if Mapbox's utility isn't available
       const coordinates = routeGeometry.coordinates;
       if (!coordinates || coordinates.length === 0) {
         console.warn('No coordinates in route geometry');

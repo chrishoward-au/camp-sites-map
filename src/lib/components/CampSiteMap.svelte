@@ -184,19 +184,47 @@
 
 	/**
 	 * Updates the markers on the map based on the given sites.
+	 * Efficiently manages markers by only adding new ones, updating changed ones,
+	 * and removing deleted ones.
 	 * @param {Array} sites - The array of site objects.
 	 */
 	function updateMarkers(sites) {
-		// Remove existing markers
-		for (let marker of markers.values()) {
-			marker.remove();
+		if (!map) return;
+
+		// Create a Set of current site IDs for quick lookup
+		const currentSiteIds = new Set(sites.map(site => site.id));
+		
+		// Track which markers need to be removed (markers that exist but aren't in the current sites)
+		const markersToRemove = [];
+		
+		// First pass: identify markers to remove
+		for (const [siteId, marker] of markers.entries()) {
+			if (!currentSiteIds.has(siteId)) {
+				markersToRemove.push(siteId);
+			}
 		}
-		markers.clear();
+		
+		// Remove markers that no longer exist
+		markersToRemove.forEach(siteId => {
+			markers.get(siteId).remove();
+			markers.delete(siteId);
+		});
 
-		// Add new markers
-		// In your updateMarkers function, modify how you create popups:
-
+		// Second pass: add new markers or update existing ones
 		sites.forEach((site) => {
+			const existingMarker = markers.get(site.id);
+			
+			// If marker already exists, just update its position if needed
+			if (existingMarker) {
+				// Only update position if it changed
+				const currentPos = existingMarker.getLngLat();
+				if (currentPos.lng !== site.longitude || currentPos.lat !== site.latitude) {
+					existingMarker.setLngLat([site.longitude, site.latitude]);
+				}
+				return; // Skip creating a new marker
+			}
+			
+			// Create a new marker for new sites
 			const el = document.createElement('div');
 			el.className = 'site-pip-container';
 			el.innerHTML = '<i class="fa-solid fa-location-dot text-3xl drop-shadow-md site-pip"></i>';
@@ -383,9 +411,18 @@
 				}
 				console.log('data:', data);
 				
-				// Draw the new route
-				currentRouteLayer = await drawRoute(map, data.routes[activeRouteIndex].geometry);
-				console.log('currentRouteLayer:', currentRouteLayer);
+				// Draw or update the route
+				if (currentRouteLayer) {
+					// Update existing route if possible
+					const updated = currentRouteLayer.update(data.routes[activeRouteIndex].geometry);
+					if (!updated) {
+						// If update failed, create a new route layer
+						currentRouteLayer = await drawRoute(map, data.routes[activeRouteIndex].geometry);
+					}
+				} else {
+					// Create a new route layer if none exists
+					currentRouteLayer = await drawRoute(map, data.routes[activeRouteIndex].geometry);
+				}
 
 				console.log('Routes:', data.routes);
 				console.log('Active route index:', activeRouteIndex);
@@ -425,6 +462,7 @@
 	function resetRouteAndMarkers() {
 		// Clear existing route if any
 		if (currentRouteLayer) {
+			// Use the improved remove method from our enhanced route layer
 			currentRouteLayer.remove();
 			currentRouteLayer = null;
 		}
@@ -909,27 +947,45 @@
 	}}
 	on:routeSelect={(e) => {
 		const index = e.detail.index;
-		if (currentRouteLayer && data && data.routes && data.routes[index]) {
+		if (data && data.routes && data.routes[index]) {
 			activeRouteIndex = index; // Update the active route index
-			currentRouteLayer.remove();
-			drawRoute(map, data.routes[index].geometry).then(layer => {
-				currentRouteLayer = layer;
-				zoomToRouteBounds(currentRouteLayer);
-				
-				// Regenerate the route links with the new active index
-				const routeDDList = data.routes.map((route, idx) => {
-					const isActive = idx === activeRouteIndex;
-					return `<a href="#" class="route-link ${isActive ? 'active-route' : ''}" data-index="${idx}">
-						Route ${idx + 1}: ${Math.round(route.distance / 1000, 1)} km - ${Math.round(route.duration / 60, 1)} min
-					</a>`;
+			
+			// Use the optimized route handling approach
+			if (currentRouteLayer) {
+				// Try to update the existing route layer first
+				const updated = currentRouteLayer.update(data.routes[index].geometry);
+				if (!updated) {
+					// If update failed, remove the old layer and create a new one
+					currentRouteLayer.remove();
+					drawRoute(map, data.routes[index].geometry).then(layer => {
+						currentRouteLayer = layer;
+						zoomToRouteBounds(currentRouteLayer);
+					});
+				} else {
+					// If update was successful, just zoom to the updated bounds
+					zoomToRouteBounds(currentRouteLayer);
+				}
+			} else {
+				// No existing route layer, create a new one
+				drawRoute(map, data.routes[index].geometry).then(layer => {
+					currentRouteLayer = layer;
+					zoomToRouteBounds(currentRouteLayer);
 				});
-				
-				// Join the route links
-				const routeLinks = routeDDList.join('');
-				
-				// Update the dialog content to reflect the new active route
-				dialogContent = getRouteInfoTemplate(travelMode, routeLinks, activeRouteIndex);
+			}
+			
+			// Regenerate the route links with the new active index
+			const routeDDList = data.routes.map((route, idx) => {
+				const isActive = idx === activeRouteIndex;
+				return `<a href="#" class="route-link ${isActive ? 'active-route' : ''}" data-index="${idx}">
+					Route ${idx + 1}: ${Math.round(route.distance / 1000, 1)} km - ${Math.round(route.duration / 60, 1)} min
+				</a>`;
 			});
+			
+			// Join the route links
+			const routeLinks = routeDDList.join('');
+			
+			// Update the dialog content to reflect the new active route
+			dialogContent = getRouteInfoTemplate(travelMode, routeLinks, activeRouteIndex);
 		}
 	}}
 />
