@@ -84,8 +84,8 @@
               max="20" 
               value={$settings.app.defaultZoomLevel} 
               on:input={(e) => updateZoomLevel('defaultZoomLevel', e)}
-              class="w-full h-2 
-                bg-gray-200 dark:bg-gray-600 
+              class="w-full h-2
+                bg-gray-200 dark:bg-gray-600
                 rounded-lg 
                 appearance-none 
                 cursor-pointer"

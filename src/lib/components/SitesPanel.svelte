@@ -94,9 +94,9 @@
 						<p>No locations saved yet</p>
 					</div>
 				{:else}
-					<div class="divide-y divide-gray-200 dark:divide-gray-700">
+					<div class="list divide-y divide-gray-200 dark:divide-gray-700">
 						{#each $campSitesStore as site}
-							<div class="px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700">
+							<div class="list-row px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-700">
 								<div class="flex items-center justify-between">
 									<div class="min-w-0 flex-1 pr-2">
 										<input
@@ -111,20 +111,20 @@
 									</div>
 									<div class="flex items-center space-x-2">
 										<Button
-											variant="icon-blue"
 											size="sm"
 											on:click={() => focusOnSite(site)}
 											title="Focus on site"
 											icon="fa-solid fa-location-dot"
-											iconColor="text-blue-600 dark:text-blue-500"
+											iconColor="text-blue-600 dark:text-blue-500 hover:text-white dark:hover:text-white"
+											className="hover:text-white dark:hover:text-white p-1"
 											/>
 										<Button
-											variant="icon-red"
 											size="sm"
 											on:click={() => deleteSite(site)}
 											title="Delete site"
 											icon="fa-solid fa-trash"
-											iconColor="text-red-600 dark:text-red-500"
+											iconColor="text-red-600 dark:text-red-500 hover:text-white dark:hover:text-white"
+											className="hover:text-white dark:hover:text-white p-1"
 											/>
 									</div>
 								</div>
