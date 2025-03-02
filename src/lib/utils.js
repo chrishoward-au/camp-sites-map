@@ -84,6 +84,16 @@ export async function drawRoute(map, routeGeometry, routeId = 'route') {
         'line-opacity': 0.7
       }
     });
+    
+    // Set cursor to pointer when hovering over the route
+    map.on('mouseenter', layerId, () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+    
+    // Reset cursor when leaving the route
+    map.on('mouseleave', layerId, () => {
+      map.getCanvas().style.cursor = '';
+    });
   }
 
   // Create a wrapper object with getBounds method
