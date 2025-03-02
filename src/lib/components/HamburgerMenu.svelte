@@ -27,7 +27,9 @@
   function handleSwitchLayer() {
     mapType = mapType === 'map' ? 'globe' : 'map';
     console.log('Map type:', mapType);
-    dispatch('switchLayer');
+    // Pass the correct layer type based on the mapType
+    const layer = mapType === 'map' ? 'streets' : 'satellite';
+    dispatch('switchLayer', { layer });
   }
 
   function handleHeatGradientLayer() {
