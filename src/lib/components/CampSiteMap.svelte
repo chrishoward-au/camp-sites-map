@@ -153,7 +153,7 @@
 	// Show route info dialog
 	function showRouteInfoDialog(routeResult) {
 		console.log('Showing route info dialog');
-	console.log('routeResult:', routeResult);	
+		console.log('routeResult:', routeResult);	
 
 		const { data, activeRouteIndex, routeInfo } = routeResult;
 		const routeState = routeManager.getRouteState();
@@ -169,6 +169,12 @@
 		);
 		console.log('dialogContent:', dialogContent);
 		dialogVisible = true;
+	}
+	
+	// Handle route click event
+	function handleRouteClick(event) {
+		console.log('Route clicked, showing info dialog');
+		showRouteInfoDialog(event.detail);
 		dialogPosition = { top: '100px', left: '100px' };
 	}
 	
@@ -246,6 +252,7 @@
 <RouteManager
 	bind:this={routeManager}
 	map={map}
+	on:routeClick={handleRouteClick}
 />
 
 <WeatherLayerManager

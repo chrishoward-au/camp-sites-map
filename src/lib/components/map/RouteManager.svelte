@@ -57,6 +57,16 @@
                 currentRouteLayer = await drawRoute(map, data.routes[activeRouteIndex].geometry);
             }
             
+            // Add click handler to the route layer
+            currentRouteLayer.on('click', () => {
+                console.log('Route clicked');
+                dispatch('routeClick', { 
+                    data,
+                    activeRouteIndex,
+                    routeInfo: generateRouteInfo()
+                });
+            });
+            
             // Zoom to the route bounds
             zoomToRouteBounds(currentRouteLayer);
             
