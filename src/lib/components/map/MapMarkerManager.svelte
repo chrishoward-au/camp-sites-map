@@ -30,7 +30,7 @@
                 markers.delete(siteId);
             }
         }
-        
+        console.log('Updated sites:', updatedSites);
         // Now update existing markers and add new ones
         updatedSites.forEach(site => {
             const existingMarker = markers.get(site.id);

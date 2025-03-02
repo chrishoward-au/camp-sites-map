@@ -49,27 +49,44 @@
 	
 	// Set up subscriptions on mount
 	onMount(() => {
-		// Subscribe to campSites store to update markers
-		const unsubscribe = campSitesStore.subscribe(sites => {
-			if (sites && sites.length > 0 && markerManager && map) {
-				markerManager.updateMarkers(sites);
-			}
-		});
-		
-		// Clean up on destroy
-		onDestroy(() => {
-			unsubscribe();
-			
-			// Clean up all components
-			if (markerManager) markerManager.cleanup();
-			if (routeManager) routeManager.resetRoute();
-			if (weatherLayerManager) weatherLayerManager.cleanup();
-		});
+		console.log('Map component mounted');
+		console.log('Camp sites store:', $campSitesStore);
+	});
+	
+	// Clean up on destroy
+	onDestroy(() => {
+		// Clean up all components
+		if (markerManager) markerManager.cleanup();
+		if (routeManager) routeManager.resetRoute();
+		if (weatherLayerManager) weatherLayerManager.cleanup();
 	});
 	
 	// Initialize components when the map is ready
 	function handleMapReady(event) {
+		console.log('Map is ready');
 		map = event.detail.map;
+		
+		// Now that we have the map, we can update markers from the store
+		if (map && markerManager && $campSitesStore && $campSitesStore.length > 0) {
+			console.log('Updating markers after map ready with', $campSitesStore.length, 'sites');
+			markerManager.updateMarkers($campSitesStore);
+		} else {
+			console.log('Cannot update markers yet:', {
+				mapExists: !!map,
+				markerManagerExists: !!markerManager,
+				sitesExist: !!$campSitesStore,
+				sitesLength: $campSitesStore ? $campSitesStore.length : 0
+			});
+		}
+		
+		// Subscribe to campSites store to update markers when they change
+		campSitesStore.subscribe(sites => {
+			console.log('Camp sites store updated:', sites);
+			if (sites && sites.length > 0 && markerManager && map) {
+				console.log('Updating markers from store subscription');
+				markerManager.updateMarkers(sites);
+			}
+		});
 	}
 	
 	// Handle route start selection
