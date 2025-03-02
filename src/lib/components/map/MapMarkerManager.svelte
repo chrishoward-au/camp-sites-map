@@ -1,10 +1,19 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     import mapboxgl from 'mapbox-gl';
+    import { getContext } from 'svelte';
     
     export let map;
     export let sites = [];
     export let isAddSiteMode = false;
+    export let routeManager;
+    
+    // Get route state from context if available
+    let getRouteState = () => ({ selectedSites: [] });
+    
+    $: if (routeManager && routeManager.getRouteState) {
+        getRouteState = routeManager.getRouteState;
+    }
     
     const dispatch = createEventDispatcher();
     
@@ -58,17 +67,36 @@
      * Creates popup content for a site
      */
     function createPopupContent(site) {
+        // Get current route state
+        const routeState = getRouteState();
+        const hasStartLocation = routeState.selectedSites && routeState.selectedSites.length > 0;
+        const hasEndLocation = routeState.selectedSites && routeState.selectedSites.length > 1;
+        
+        // Determine which buttons to show
+        let buttonsHtml = '';
+        
+        if (!hasStartLocation) {
+            // If no start location, show only start button
+            buttonsHtml = `
+                <button class="route-start-btn px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors" data-site-id="${site.id}">
+                    Start Route
+                </button>
+            `;
+        } else if (!hasEndLocation) {
+            // If has start but no end, show only end button
+            buttonsHtml = `
+                <button class="route-end-btn px-2 py-1 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 transition-colors" data-site-id="${site.id}">
+                    End Route
+                </button>
+            `;
+        }
+        
         return `
             <div class="popup-content dark:bg-gray-800 dark:text-gray-100">
                 <h3 class="text-lg font-semibold dark:text-gray-200">${site.name || 'Unnamed Site'}</h3>
                 <p class="mt-1 text-sm dark:text-gray-300">${site.description || 'No description available.'}</p>
                 <div class="mt-2 flex space-x-2">
-                    <button class="route-start-btn px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors" data-site-id="${site.id}">
-                        Start Route
-                    </button>
-                    <button class="route-end-btn px-2 py-1 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 transition-colors" data-site-id="${site.id}">
-                        End Route
-                    </button>
+                    ${buttonsHtml}
                 </div>
             </div>
         `;

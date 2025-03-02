@@ -238,6 +238,7 @@
 <MapMarkerManager
 	bind:this={markerManager}
 	map={map}
+	routeManager={routeManager}
 	on:routeStart={handleRouteStart}
 	on:routeEnd={handleRouteEnd}
 />
