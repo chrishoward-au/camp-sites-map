@@ -79,8 +79,9 @@ function createSettingsStore() {
         }
     }
 
+
     // Add a method to change theme
-    function changeTheme(newTheme) {
+    function setTheme(newTheme) {
       update(settings => {
         const updatedSettings = {
           ...settings,
@@ -215,7 +216,7 @@ function createSettingsStore() {
 
             set(defaults);
         },
-        changeTheme
+        setTheme
     };
 }
 

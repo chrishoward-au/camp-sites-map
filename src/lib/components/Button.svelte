@@ -70,3 +70,10 @@
     <i class={`${icon} ${selected ? iconSelectedColor : iconColor}`}></i>
   {/if}
 </button>
+
+<style>
+  :global(.btn-active) {
+    background-color: rgba(59, 130, 246, 0.2); /* Light blue background */
+    border-radius: 0.25rem;
+  }
+</style>

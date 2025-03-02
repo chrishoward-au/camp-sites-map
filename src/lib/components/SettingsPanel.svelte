@@ -3,6 +3,7 @@
   import Button from './Button.svelte';
     
   export let isOpen = false;
+  $: theme = $settings.app.theme;
 
   function handleClose() {
     isOpen = false;
@@ -16,7 +17,7 @@
   }
 
   function updateTheme(event) {
-    settings.changeTheme(event.target.value);
+    settings.setTheme(event.target.value);
   }
 </script>
 
@@ -48,19 +49,22 @@
               variant="icon"
               size="sm"
               icon="fa-solid fa-sun"
-              on:click={() => settings.changeTheme('light')}
+              on:click={() => settings.setTheme('light')}
+              className={theme === 'light' ? 'btn-active' : ''}
             />
             <Button
               variant="icon"
               size="sm"
               icon="fa-solid fa-moon"
-              on:click={() => settings.changeTheme('dark')}
+              on:click={() => settings.setTheme('dark')}
+              className={theme === 'dark' ? 'btn-active' : ''}
             />
             <Button
               variant="icon"
               size="sm"
-              icon="fa-solid fa-desktop"
-              on:click={() => settings.changeTheme('system')}
+              icon="fa-solid fa-desktop"  
+              on:click={() => settings.setTheme('system')}
+              className={theme === 'system' ? 'btn-active' : ''}
             />
           </div>
         </div>
