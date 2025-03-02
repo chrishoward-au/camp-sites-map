@@ -4,7 +4,7 @@
     import mapboxgl from 'mapbox-gl';
     
     export let map;
-    export let travelMode = 'foot';
+    export let travelMode = 'walking';
     
     const dispatch = createEventDispatcher();
     
@@ -26,7 +26,9 @@
         
         try {
             // Construct the API URL with coordinates and travel mode
-            const url = `https://api.mapbox.com/directions/v5/mapbox/${travelMode}/${startPoint.lng},${startPoint.lat};${endPoint.lng},${endPoint.lat}?alternatives=true&geometries=geojson&overview=full&steps=true&access_token=${mapboxgl.accessToken}`;
+            // Valid profile values are driving-traffic, driving, walking, or cycling
+            const profile = travelMode === 'foot' ? 'walking' : travelMode;
+            const url = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${startPoint.lng},${startPoint.lat};${endPoint.lng},${endPoint.lat}?alternatives=true&geometries=geojson&overview=full&steps=true&access_token=${mapboxgl.accessToken}`;
             
             // Fetch route data
             const response = await fetch(url);
