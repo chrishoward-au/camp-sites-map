@@ -3,20 +3,30 @@
 	import CampSiteMap from '$lib/components/CampSiteMap.svelte';
 	import { onMount } from 'svelte'; 
 	import { settings } from '$lib/stores/settings.js';
+	import { campSitesStore } from '$lib/stores/campSites.js';
 
 	let mapInstance;
+	let unsubscribeCampSites;
 
 	onMount(() => {
 		if (browser) {
+			// Initialize settings store
 			settings.initialize();
+			
+			// Initialize camp sites store
+			console.log('Initializing camp sites store from page component');
+			unsubscribeCampSites = campSitesStore.initialize();
 		}
+		
+		return () => {
+			// Clean up subscriptions
+			if (unsubscribeCampSites) unsubscribeCampSites();
+		};
 	});
 
 	function handleMapInit(event) {
 		mapInstance = event.detail;
 	}
-
-
 </script>
 
 <svelte:head>
