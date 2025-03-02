@@ -1,4 +1,5 @@
 <script>
+  
   export let variant = 'default'; // default, primary, secondary, icon, menu, route-start, route-end, icon-blue, icon-red
   export let size = 'sm'; // sm, md, lg
   export let disabled = false;
@@ -70,10 +71,3 @@
     <i class={`${icon} ${selected ? iconSelectedColor : iconColor}`}></i>
   {/if}
 </button>
-
-<style>
-  :global(.btn-active) {
-    background-color: rgba(59, 130, 246, 0.2); /* Light blue background */
-    border-radius: 0.25rem;
-  }
-</style>

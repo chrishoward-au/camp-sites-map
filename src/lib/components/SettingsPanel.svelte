@@ -50,21 +50,21 @@
               size="sm"
               icon="fa-solid fa-sun"
               on:click={() => settings.setTheme('light')}
-              className={theme === 'light' ? 'btn-active' : ''}
+              selected={theme === 'light'}
             />
             <Button
               variant="icon"
               size="sm"
               icon="fa-solid fa-moon"
               on:click={() => settings.setTheme('dark')}
-              className={theme === 'dark' ? 'btn-active' : ''}
+              selected={theme === 'dark'}
             />
             <Button
               variant="icon"
               size="sm"
               icon="fa-solid fa-desktop"  
               on:click={() => settings.setTheme('system')}
-              className={theme === 'system' ? 'btn-active' : ''}
+              selected={theme === 'system'}
             />
           </div>
         </div>
