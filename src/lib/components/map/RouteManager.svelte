@@ -130,7 +130,7 @@
     /**
      * Sets the route end location
      */
-    export function setRouteEnd(site) {
+    export async function setRouteEnd(site) {
         if (selectedSites.length === 1) {
             selectedSites.push({ id: site.id, lat: site.latitude, lng: site.longitude });
             endLocationName = site.name || 'End Location';
@@ -141,7 +141,7 @@
             // Calculate the route
             const startPoint = selectedSites[0];
             const endPoint = selectedSites[1];
-            return calculateRoute(startPoint, endPoint);
+            return await calculateRoute(startPoint, endPoint);
         }
         return null;
     }
@@ -199,16 +199,22 @@
      * Generates route information for display
      */
     function generateRouteInfo() {
-        if (!data || !data.routes) return '';
+        console.log('Generating route info, data:', data);
+        if (!data || !data.routes || data.routes.length === 0) {
+            console.warn('No route data available');
+            return 'No route information available';
+        }
         
         // Generate route links
         const routeLinks = data.routes.map((route, idx) => {
             const isActive = idx === activeRouteIndex;
+            console.log(`Route ${idx}:`, route);
             return `<a href="#" class="route-link ${isActive ? 'active-route' : ''}" data-index="${idx}">
-                Route ${idx + 1}: ${Math.round(route.distance / 1000, 1)} km - ${Math.round(route.duration / 60, 1)} min
+                Route ${idx + 1}: ${(route.distance / 1000).toFixed(1)} km - ${Math.round(route.duration / 60)} min
             </a>`;
-        }).join('');
+        }).join('<br>');
         
+        console.log('Generated route links:', routeLinks);
         return routeLinks;
     }
     

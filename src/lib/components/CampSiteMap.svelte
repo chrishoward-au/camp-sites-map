@@ -101,15 +101,15 @@
 	}
 	
 	// Handle route end selection
-	function handleRouteEnd(event) {
+	async function handleRouteEnd(event) {
 		const { site, popup } = event.detail;
 		
 		// Set the route end in the RouteManager and calculate the route
-		const routeResult = routeManager.setRouteEnd(site);
+		const routeResult = await routeManager.setRouteEnd(site);
 		
 		// Create a colored marker for the end point
 		markerManager.createColoredMarker(site, '#FF9800', 'site-pip end', popup);
-		
+		console.log('routeResult:', routeResult);
 		if (routeResult) {
 			// Show the route info dialog
 			showRouteInfoDialog(routeResult);
@@ -152,8 +152,13 @@
 	
 	// Show route info dialog
 	function showRouteInfoDialog(routeResult) {
+		console.log('Showing route info dialog');
+	console.log('routeResult:', routeResult);	
+
 		const { data, activeRouteIndex, routeInfo } = routeResult;
 		const routeState = routeManager.getRouteState();
+		console.log('routeState:', routeState);
+		console.log('routeInfo:', routeInfo);
 		
 		dialogContent = getRouteInfoTemplate(
 			routeState.travelMode, 
@@ -162,7 +167,7 @@
 			routeState.startLocationName,
 			routeState.endLocationName
 		);
-		
+		console.log('dialogContent:', dialogContent);
 		dialogVisible = true;
 		dialogPosition = { top: '100px', left: '100px' };
 	}
