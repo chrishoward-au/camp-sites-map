@@ -1,5 +1,5 @@
 <script>
-    import { createEventDispatcher, onMount, onDestroy } from 'svelte';
+    import { createEventDispatcher, onMount, onDestroy, tick } from 'svelte';
     import { browser } from '$app/environment';
     import mapboxgl from 'mapbox-gl';
     import { getCurrentLocation } from '$lib/utils';
@@ -14,71 +14,86 @@
     let map;
     let mapContainer;
     let isAddSiteMode = false;
+    let mapInitialized = false;
     
     onMount(async () => {
         if (!browser) return;
         
-        // Set Mapbox access token
-        mapboxgl.accessToken = mapboxToken;
+        // Wait for the next tick to ensure the DOM is ready
+        await tick();
         
-        // Initialize the map
-        map = new mapboxgl.Map({
-            container: mapContainer,
-            style: 'mapbox://styles/mapbox/streets-v12',
-            center: [defaultLng, defaultLat],
-            zoom: defaultZoom
-        });
+        if (!mapContainer) {
+            console.error('Map container element not found');
+            return;
+        }
         
-        // Add navigation controls
-        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-        
-        // Add fullscreen control
-        map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
-        
-        // Add geolocate control
-        const geolocateControl = new mapboxgl.GeolocateControl({
-            positionOptions: {
-                enableHighAccuracy: true
-            },
-            trackUserLocation: true,
-            showUserHeading: true
-        });
-        map.addControl(geolocateControl, 'top-right');
-        
-        // Wait for map to load
-        map.on('load', () => {
-            // Try to get user's current location
-            getCurrentLocation()
-                .then(position => {
-                    if (position && position.coords) {
-                        map.flyTo({
-                            center: [position.coords.longitude, position.coords.latitude],
-                            zoom: 14,
-                            essential: true
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error getting current location:', error);
-                });
-                
-            // Dispatch map ready event
-            dispatch('mapReady', { map });
-        });
-        
-        // Add click handler for add site mode
-        map.on('click', (e) => {
-            if (isAddSiteMode) {
-                dispatch('mapClick', { 
-                    point: e.point,
-                    lngLat: e.lngLat
-                });
-            }
-        });
+        try {
+            // Set Mapbox access token
+            mapboxgl.accessToken = mapboxToken;
+            
+            // Initialize the map
+            map = new mapboxgl.Map({
+                container: mapContainer,
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [defaultLng, defaultLat],
+                zoom: defaultZoom
+            });
+            
+            mapInitialized = true;
+            
+            // Add navigation controls
+            map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+            
+            // Add fullscreen control
+            map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+            
+            // Add geolocate control
+            const geolocateControl = new mapboxgl.GeolocateControl({
+                positionOptions: {
+                    enableHighAccuracy: true
+                },
+                trackUserLocation: true,
+                showUserHeading: true
+            });
+            map.addControl(geolocateControl, 'top-right');
+            
+            // Wait for map to load
+            map.on('load', () => {
+                // Try to get user's current location
+                getCurrentLocation()
+                    .then(position => {
+                        if (position && position.coords) {
+                            map.flyTo({
+                                center: [position.coords.longitude, position.coords.latitude],
+                                zoom: 14,
+                                essential: true
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error getting current location:', error);
+                    });
+                    
+                // Dispatch map ready event
+                dispatch('mapReady', { map });
+            });
+            
+            // Add click handler for add site mode
+            map.on('click', (e) => {
+                if (isAddSiteMode) {
+                    dispatch('mapClick', { 
+                        point: e.point,
+                        lngLat: e.lngLat
+                    });
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing map:', error);
+        }
     });
     
     onDestroy(() => {
-        if (map) {
+        if (map && mapInitialized) {
             map.remove();
         }
     });

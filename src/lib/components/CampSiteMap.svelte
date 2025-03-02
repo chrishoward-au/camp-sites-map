@@ -47,13 +47,11 @@
 	const DEFAULT_LAT = -36.114858138524454;
 	const DEFAULT_LNG = 146.8884086608887;
 	
-	// Initialize components when the map is ready
-	function handleMapReady(event) {
-		map = event.detail.map;
-		
+	// Set up subscriptions on mount
+	onMount(() => {
 		// Subscribe to campSites store to update markers
 		const unsubscribe = campSitesStore.subscribe(sites => {
-			if (sites && sites.length > 0 && markerManager) {
+			if (sites && sites.length > 0 && markerManager && map) {
 				markerManager.updateMarkers(sites);
 			}
 		});
@@ -61,7 +59,17 @@
 		// Clean up on destroy
 		onDestroy(() => {
 			unsubscribe();
+			
+			// Clean up all components
+			if (markerManager) markerManager.cleanup();
+			if (routeManager) routeManager.resetRoute();
+			if (weatherLayerManager) weatherLayerManager.cleanup();
 		});
+	});
+	
+	// Initialize components when the map is ready
+	function handleMapReady(event) {
+		map = event.detail.map;
 	}
 	
 	// Handle route start selection
@@ -93,8 +101,12 @@
 	
 	// Handle map style change
 	function switchLayer(event) {
-		const layer = event.detail.layer;
-		mapStyleManager.switchMapStyle(layer);
+		if (!mapStyleManager || !map) return;
+		
+		const layer = event.detail?.layer;
+		if (layer) {
+			mapStyleManager.switchMapStyle(layer);
+		}
 	}
 	
 	// Handle add site mode toggle
