@@ -67,24 +67,33 @@
      * Creates popup content for a site
      */
     function createPopupContent(site) {
+        console.log('Creating popup content for', site.name);
         // Get current route state
         const routeState = getRouteState();
-        const hasStartLocation = routeState.selectedSites && routeState.selectedSites.length > 0;
-        const hasEndLocation = routeState.selectedSites && routeState.selectedSites.length > 1;
+        console.log('Route state:', routeState);
         
-        // Determine which buttons to show
         let buttonsHtml = '';
         
-        if (!hasStartLocation) {
-            // If no start location, show only start button
-            buttonsHtml = `
+        // Show Start Route button if no route is started or if this site is not the start point
+        const isStartPoint = routeState.selectedSites && routeState.selectedSites.length > 0 && 
+                            routeState.selectedSites[0].id === site.id;
+                            
+        // Show End Route button if a route is started and this site is not already the end point
+        const isEndPoint = routeState.selectedSites && routeState.selectedSites.length > 1 && 
+                          routeState.selectedSites[1].id === site.id;
+        
+        // If no route is started or this site is not part of the route, show Start Route button
+        if (!routeState.selectedSites || routeState.selectedSites.length === 0 || !isStartPoint) {
+            buttonsHtml += `
                 <button class="route-start-btn px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors" data-site-id="${site.id}">
                     Start Route
                 </button>
             `;
-        } else if (!hasEndLocation) {
-            // If has start but no end, show only end button
-            buttonsHtml = `
+        }
+        
+        // If a route is started but not ended, and this site is not the start point, show End Route button
+        if (routeState.selectedSites && routeState.selectedSites.length === 1 && !isStartPoint) {
+            buttonsHtml += `
                 <button class="route-end-btn px-2 py-1 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 transition-colors" data-site-id="${site.id}">
                     End Route
                 </button>
@@ -108,12 +117,12 @@
     function addMarker(site) {
         if (!map) return;
         
-        // Create popup
+        // Create popup with empty content initially
         const popup = new mapboxgl.Popup({
             closeButton: true,
             closeOnClick: false,
             className: 'dark:dark-popup'
-        }).setHTML(createPopupContent(site));
+        });
         
         // Add the popup to our tracking array
         popups.push(popup);
@@ -128,8 +137,11 @@
             .setPopup(popup)
             .addTo(map);
         
-        // Add click handler to the popup content
+        // Set popup content and add event handlers when the popup is opened
         popup.on('open', () => {
+            // Update the popup content with the current route state
+            popup.setHTML(createPopupContent(site));
+            
             setTimeout(() => {
                 const popupContent = document.querySelector(`.mapboxgl-popup-content`);
                 if (popupContent) {
