@@ -12,6 +12,7 @@
 	import RouteInfoDialog from '$lib/components/RouteInfoDialog.svelte';
 	import mapboxgl from 'mapbox-gl';
 	import RouteInfo from '$lib/components/RouteInfo.svelte';
+	import Button from '$lib/components/Button.svelte';
 
 	const dispatch = createEventDispatcher();
 	const mapboxToken = import.meta.env.PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -151,8 +152,8 @@
 				<input type="text" id="site-title" placeholder="Site Title" class="site-input dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
 				<textarea id="site-description" placeholder="Site Description" class="site-input dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"></textarea>
 				<div class="popup-buttons">
-					<button id="confirm-add" class="btn btn-secondary confirm">Add Site</button>
-					<button id="cancel-add" class="btn btn-secondary cancel">Cancel</button>
+					<Button size="sm" class="confirm">Add Site</button>
+					<Button size="sm" class="cancel">Cancel</button>
 				</div>
 			</div>
 		`;
@@ -232,7 +233,7 @@
 			// Create an empty popup first
 			const popup = new mapboxgl.Popup({ className: $settings.app.theme+'-theme' });
 
-			const marker = new mapboxgl.Marker({ color: 'blue', className: 'site-pip', scale: 0.65 })
+			const marker = new mapboxgl.Marker({ color: 'oklch(0.685 0.169 237.323)', className: 'site-pip', scale: 0.65 })
 				.setLngLat([site.longitude, site.latitude])
 				.setPopup(popup)
 				.addTo(map);
@@ -249,7 +250,7 @@
       ${site.name ? `<h3 class="text-gray-800 dark:text-gray-100">${site.name}</h3>` : ''}
       ${site.description ? `<p class="text-gray-800 dark:text-gray-100">${site.description}</p>` : ''}
       <div class="popup-buttons">
-									<Button size="sm" class="btn btn-primary route-btn" id="route-action-btn-${site.id}">
+									<Button size="sm" variant="primary" class="route-btn" id="route-action-btn-${site.id}">
 										${isStartButton ? 'Start Route' : 'End Route'}
 									</Button>
         </div>
@@ -506,7 +507,7 @@
 						
 						// Create a new blue marker
 						const newMarker = new mapboxgl.Marker({ 
-							color: 'blue', 
+							color: 'oklch(0.685 0.169 237.323)', 
 							className: 'site-pip', 
 							scale: 0.65 
 						})
@@ -527,7 +528,7 @@
 								${siteData.name ? `<h3 class="text-gray-800 dark:text-gray-100">${siteData.name}</h3>` : ''}
 								${siteData.description ? `<p class="text-gray-800 dark:text-gray-100">${siteData.description}</p>` : ''}
 								<div class="popup-buttons">
-									<Button size="sm" class="route-btn" id="route-action-btn-${siteData.id}">
+									<Button size="sm" class="btn btn-primary route-btn" id="route-action-btn-${siteData.id}">
 										${isStartButton ? 'Start Route' : 'End Route'}
 									</Button>
 								</div>
@@ -583,7 +584,7 @@
 
 		// Create a new marker with green color
 		const newMarker = new mapboxgl.Marker({
-			color: '#4CAF50',
+			color: 'oklch(0.723 0.219 149.579)',
 			className: 'site-pip start',
 			scale: 0.65
 		})
@@ -616,7 +617,7 @@
 
 			// Create a new marker with orange color
 			const newMarker = new mapboxgl.Marker({
-				color: '#FF4400',
+				color: 'oklch(0.637 0.237 25.331)',
 				className: 'site-pip end',
 				scale: 0.65
 			})

@@ -16,6 +16,7 @@
   const baseClasses = 'btn inline-flex items-center justify-center transition-colors duration-200 focus:outline-none';
   
   const variantClasses = {
+    default: 'btn',
     primary: 'btn btn-primary',
     secondary: 'btn btn-secondary',
     icon: 'btn btn-icon',
