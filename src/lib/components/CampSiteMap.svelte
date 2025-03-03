@@ -14,6 +14,7 @@
 	import RouteInfo from '$lib/components/RouteInfo.svelte';
 	import Button from '$lib/components/Button.svelte';
 
+
 	const dispatch = createEventDispatcher();
 	const mapboxToken = import.meta.env.PUBLIC_MAPBOX_ACCESS_TOKEN;
 	const openWeatherMapApiKey = import.meta.env.PUBLIC_OPENWEATHER_API_KEY;
@@ -51,8 +52,6 @@
 	const DEFAULT_LAT = -36.114858138524454;
 	const DEFAULT_LNG = 146.8884086608887;
 	const DEFAULT_STYLE = 'mapbox://styles/mapbox/streets-v12';
-
-	
 
 	/**
 	 * Initializes the map with the given position.
@@ -99,7 +98,10 @@
 
 	function addMapControls(mapInstance) {
 		mapInstance.addControl(new mapboxgl.NavigationControl({ position: 'top-right' }));
-		const geolocateControl = new mapboxgl.GeolocateControl({ positionOptions: { enableHighAccuracy: true }, trackUserLocation: true });
+		const geolocateControl = new mapboxgl.GeolocateControl({
+			positionOptions: { enableHighAccuracy: true },
+			trackUserLocation: true
+		});
 		mapInstance.addControl(geolocateControl);
 	}
 
@@ -112,7 +114,9 @@
 			el.style.height = '12px';
 			el.style.borderRadius = '50%';
 			el.style.border = '2px solid white';
-			new mapboxgl.Marker(el).setLngLat([position.coords.longitude, position.coords.latitude]).addTo(mapInstance);
+			new mapboxgl.Marker(el)
+				.setLngLat([position.coords.longitude, position.coords.latitude])
+				.addTo(mapInstance);
 		}
 	}
 
@@ -136,11 +140,13 @@
 	function showZoomInPopup(mapInstance, point, currentZoom) {
 		new mapboxgl.Popup({ className: $settings.app.theme + '-theme' })
 			.setLngLat(point)
-			.setHTML(`<div class="add-site-popup dark:bg-gray-800 dark:text-gray-100">
+			.setHTML(
+				`<div class="add-site-popup dark:bg-gray-800 dark:text-gray-100">
 				<p>Please zoom in closer to add a camp site (zoom level must be 14 or greater)</p>
 				<p>Current zoom level: ${Math.floor(currentZoom)}</p>
 				<p>Tip: Use Cmd/Ctrl + Click to add a site</p>
-			</div>`)
+			</div>`
+			)
 			.addTo(mapInstance);
 	}
 
@@ -158,7 +164,10 @@
 			</div>
 		`;
 
-		const popup = new mapboxgl.Popup({ className: $settings.app.theme + '-theme', maxWidth: '300px' })
+		const popup = new mapboxgl.Popup({
+			className: $settings.app.theme + '-theme',
+			maxWidth: '300px'
+		})
 			.setLngLat(point)
 			.setDOMContent(popupContent)
 			.addTo(mapInstance);
@@ -167,7 +176,12 @@
 			const title = popupContent.querySelector('#site-title').value.trim();
 			const description = popupContent.querySelector('#site-description').value.trim();
 			if (title) {
-				const newSite = await campSitesStore.addSite({ name: title, description: description || '', latitude: point.lat, longitude: point.lng });
+				const newSite = await campSitesStore.addSite({
+					name: title,
+					description: description || '',
+					latitude: point.lat,
+					longitude: point.lng
+				});
 				if (newSite) popup.remove();
 				else alert('Error adding camp site. Please try again.');
 			} else alert('Please enter a title for the camp site');
@@ -193,20 +207,20 @@
 		if (!map) return;
 
 		// Create a Set of current site IDs for quick lookup
-		const currentSiteIds = new Set(sites.map(site => site.id));
-		
+		const currentSiteIds = new Set(sites.map((site) => site.id));
+
 		// Track which markers need to be removed (markers that exist but aren't in the current sites)
 		const markersToRemove = [];
-		
+
 		// First pass: identify markers to remove
 		for (const [siteId, marker] of markers.entries()) {
 			if (!currentSiteIds.has(siteId)) {
 				markersToRemove.push(siteId);
 			}
 		}
-		
+
 		// Remove markers that no longer exist
-		markersToRemove.forEach(siteId => {
+		markersToRemove.forEach((siteId) => {
 			markers.get(siteId).remove();
 			markers.delete(siteId);
 		});
@@ -214,7 +228,7 @@
 		// Second pass: add new markers or update existing ones
 		sites.forEach((site) => {
 			const existingMarker = markers.get(site.id);
-			
+
 			// If marker already exists, just update its position if needed
 			if (existingMarker) {
 				// Only update position if it changed
@@ -224,16 +238,20 @@
 				}
 				return; // Skip creating a new marker
 			}
-			
+
 			// Create a new marker for new sites
 			const el = document.createElement('div');
 			el.className = 'site-pip-container';
 			el.innerHTML = '<i class="fa-solid fa-location-dot text-3xl drop-shadow-md site-pip"></i>';
 
 			// Create an empty popup first
-			const popup = new mapboxgl.Popup({ className: $settings.app.theme+'-theme' });
+			const popup = new mapboxgl.Popup({ className: $settings.app.theme + '-theme' });
 
-			const marker = new mapboxgl.Marker({ color: 'oklch(0.685 0.169 237.323)', className: 'site-pip', scale: 0.65 })
+			const marker = new mapboxgl.Marker({
+				color: 'oklch(0.685 0.169 237.323)',
+				className: 'site-pip',
+				scale: 0.65
+			})
 				.setLngLat([site.longitude, site.latitude])
 				.setPopup(popup)
 				.addTo(map);
@@ -246,16 +264,32 @@
 				const isStartButton = selectedSites.length === 0 || selectedSites.length === 2;
 
 				const popupHTML = `
-    <div class="popup-content bg-gray-100 dark:bg-gray-700">
-      ${site.name ? `<h3 class="text-gray-800 dark:text-gray-100">${site.name}</h3>` : ''}
-      ${site.description ? `<p class="text-gray-800 dark:text-gray-100">${site.description}</p>` : ''}
-      <div class="popup-buttons">
-									<Button size="sm" variant="primary" class="route-btn" id="route-action-btn-${site.id}">
-										${isStartButton ? 'Start Route' : 'End Route'}
-									</Button>
-        </div>
-    </div>
-    `;
+					<div class="popup-content bg-gray-100 dark:bg-gray-700">
+						${site.name ? `<h3 class="text-gray-800 dark:text-gray-100">${site.name}</h3>` : ''}
+						${site.description ? `<p class="text-gray-800 dark:text-gray-100">${site.description}</p>` : ''}
+						<div id="route-buttons" class="popup-buttons">
+							</div>
+					</div>
+					`;
+
+				const routeButtonContainer = document.createElement('div');
+
+				// Create and mount the Svelte component
+				const routeButton = Button({
+					target: routeButtonContainer,
+					props: {
+						size: 'sm',
+						variant: 'primary',
+						class: 'route-btn',
+						id: `route-action-btn-${site.id}`
+					},
+					content: isStartButton ? 'Start Route' : 'End Route'
+				});
+
+				const popupContainer = document.getElementById('route-buttons');
+				if (popupContainer) {
+					popupContainer.appendChild(routeButtonContainer);
+				}
 
 				// Set the HTML content
 				popup.setHTML(popupHTML);
@@ -359,7 +393,14 @@
 	 * @param {Object} endPoint - The end point with lat and lng properties.
 	 */
 	async function calculateRoute(startPoint, endPoint) {
-		if (!startPoint || !endPoint || !startPoint.lat || !startPoint.lng || !endPoint.lat || !endPoint.lng) {
+		if (
+			!startPoint ||
+			!endPoint ||
+			!startPoint.lat ||
+			!startPoint.lng ||
+			!endPoint.lat ||
+			!endPoint.lng
+		) {
 			console.error('Invalid start or end point for route calculation', { startPoint, endPoint });
 			return;
 		}
@@ -371,7 +412,7 @@
 		try {
 			// Reset active route index to 0 when calculating a new route
 			activeRouteIndex = 0;
-			
+
 			// Clear existing route if any
 			if (currentRouteLayer) {
 				currentRouteLayer.remove();
@@ -389,11 +430,11 @@
 			try {
 				const response = await fetch(url);
 				data = await response.json();
-				
+
 				if (!data || !data.routes || data.routes.length === 0) {
 					throw new Error('No routes found');
 				}
-				
+
 				const routesCount = data.routes.length;
 				const routeDDList = data.routes.map((route, index) => {
 					const isActive = index === activeRouteIndex;
@@ -411,7 +452,7 @@
 					throw new Error('No routes found');
 				}
 				console.log('data:', data);
-				
+
 				// Draw or update the route
 				if (currentRouteLayer) {
 					// Update existing route if possible
@@ -470,59 +511,59 @@
 
 		// Close dialog if open
 		dialogVisible = false;
-		
+
 		// Reset route data
 		data = null;
 		activeRouteIndex = 0;
 		startLocationName = '';
 		endLocationName = '';
-		
+
 		// Reset start and end points
 		start = null;
 		end = null;
-		
+
 		// Reset selected sites and their markers
 		if (selectedSites.length > 0) {
 			// Get the IDs of the sites that need to be reset
 			const sitesToReset = [...selectedSites];
-			
+
 			// Clear selected sites array
 			selectedSites = [];
-			
+
 			// Reset each marker individually to blue
-			sitesToReset.forEach(site => {
+			sitesToReset.forEach((site) => {
 				const oldMarker = markers.get(site.id);
 				if (oldMarker) {
 					oldMarker.remove();
-					
+
 					// Find the site data in the campSitesStore
 					let siteData;
-					campSitesStore.subscribe(sites => {
-						siteData = sites.find(s => s.id === site.id);
+					campSitesStore.subscribe((sites) => {
+						siteData = sites.find((s) => s.id === site.id);
 					})();
-					
+
 					if (siteData) {
 						// Create a new popup
-						const popup = new mapboxgl.Popup({ className: $settings.app.theme+'-theme' });
-						
+						const popup = new mapboxgl.Popup({ className: $settings.app.theme + '-theme' });
+
 						// Create a new blue marker
-						const newMarker = new mapboxgl.Marker({ 
-							color: 'oklch(0.685 0.169 237.323)', 
-							className: 'site-pip', 
-							scale: 0.65 
+						const newMarker = new mapboxgl.Marker({
+							color: 'oklch(0.685 0.169 237.323)',
+							className: 'site-pip',
+							scale: 0.65
 						})
 							.setLngLat([siteData.longitude, siteData.latitude])
 							.setPopup(popup)
 							.addTo(map);
-						
+
 						// Update the markers Map with the new marker
 						markers.set(site.id, newMarker);
-						
+
 						// Set the popup content dynamically when it opens
 						popup.on('open', () => {
 							// Determine if this should be a start or end button based on current selectedSites
 							const isStartButton = selectedSites.length === 0 || selectedSites.length === 2;
-							
+
 							const popupHTML = `
 							<div class="popup-content bg-gray-100 dark:bg-gray-700">
 								${siteData.name ? `<h3 class="text-gray-800 dark:text-gray-100">${siteData.name}</h3>` : ''}
@@ -534,10 +575,10 @@
 								</div>
 							</div>
 							`;
-							
+
 							// Set the HTML content
 							popup.setHTML(popupHTML);
-							
+
 							// Add the event listener after the popup content is set
 							setTimeout(() => {
 								const button = document.getElementById(`route-action-btn-${siteData.id}`);
@@ -570,7 +611,7 @@
 	function setRouteStart(site, popup) {
 		// Reset existing routes and markers when starting a new route
 		resetRouteAndMarkers();
-		
+
 		// Now set the new start point
 		selectedSites = [{ id: site.id, lat: site.latitude, lng: site.longitude }];
 		startLocationName = site.name || 'Start Location';
@@ -774,7 +815,7 @@
 						Math.log(
 							Math.tan((center.lat * Math.PI) / 180) + 1 / Math.cos((center.lat * Math.PI) / 180)
 						) /
-						Math.PI) /
+							Math.PI) /
 						2) *
 						Math.pow(2, zoom)
 				);
@@ -941,7 +982,7 @@
 	title={dialogTitle}
 	content={dialogContent}
 	position={dialogPosition}
-	onClose={() => dialogVisible = false}
+	onClose={() => (dialogVisible = false)}
 	on:modeChange={(e) => {
 		travelMode = e.detail.mode;
 		calculateRoute(start, end);
@@ -950,7 +991,7 @@
 		const index = e.detail.index;
 		if (data && data.routes && data.routes[index]) {
 			activeRouteIndex = index; // Update the active route index
-			
+
 			// Use the optimized route handling approach
 			if (currentRouteLayer) {
 				// Try to update the existing route layer first
@@ -958,7 +999,7 @@
 				if (!updated) {
 					// If update failed, remove the old layer and create a new one
 					currentRouteLayer.remove();
-					drawRoute(map, data.routes[index].geometry).then(layer => {
+					drawRoute(map, data.routes[index].geometry).then((layer) => {
 						currentRouteLayer = layer;
 						zoomToRouteBounds(currentRouteLayer);
 					});
@@ -968,12 +1009,12 @@
 				}
 			} else {
 				// No existing route layer, create a new one
-				drawRoute(map, data.routes[index].geometry).then(layer => {
+				drawRoute(map, data.routes[index].geometry).then((layer) => {
 					currentRouteLayer = layer;
 					zoomToRouteBounds(currentRouteLayer);
 				});
 			}
-			
+
 			// Regenerate the route links with the new active index
 			const routeDDList = data.routes.map((route, idx) => {
 				const isActive = idx === activeRouteIndex;
@@ -981,15 +1022,16 @@
 					Route ${idx + 1}: ${Math.round(route.distance / 1000, 1)} km - ${Math.round(route.duration / 60, 1)} min
 				</a>`;
 			});
-			
+
 			// Join the route links
 			const routeLinks = routeDDList.join('');
-			
+
 			// Update the dialog content to reflect the new active route
 			dialogContent = getRouteInfoTemplate(travelMode, routeLinks, activeRouteIndex);
 		}
 	}}
 />
+
 <style>
 	.map-container {
 		width: 100%;

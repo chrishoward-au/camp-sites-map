@@ -36,7 +36,7 @@
         variant="icon"
         size="sm"
         icon="fa-solid fa-times"
-        on:click={handleClose}
+        onclick={() => handleClose()}
         transparent={true}
       />
     </div>
@@ -51,7 +51,7 @@
               variant="icon"
               size="sm"
               icon="fa-solid fa-sun"
-              on:click={() => settings.changeTheme('light')}
+              onclick={() => settings.changeTheme('light')}
               transparent={true}
               selected={currentTheme === 'light'}
             />
@@ -59,7 +59,7 @@
               variant="icon"
               size="sm"
               icon="fa-solid fa-moon"
-              on:click={() => settings.changeTheme('dark')}
+              onclick={() => settings.changeTheme('dark')}
               transparent={true}
               selected={currentTheme === 'dark'}
             />
@@ -67,7 +67,7 @@
               variant="icon"
               size="sm"
               icon="fa-solid fa-desktop"
-              on:click={() => settings.changeTheme('system')}
+              onclick={() => settings.changeTheme('system')}
               transparent={true}
               selected={currentTheme === 'system'}
             />

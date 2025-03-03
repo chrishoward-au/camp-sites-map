@@ -155,7 +155,12 @@ textarea.site-input {
     hover:bg-primary hover:text-white
     disabled:cursor-not-allowed disabled:opacity-50
 }
-.btn-transparent {
+
+.btn-icon {
+    @apply bg-transparent;
+}
+
+.btn-menu {
     @apply bg-transparent;
 }
 

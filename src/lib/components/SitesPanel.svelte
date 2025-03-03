@@ -73,14 +73,14 @@
 					<Button
 						variant="icon"
 						size="sm"
-						on:click={gotoCurrentLocation}
+						onclick={()=>gotoCurrentLocation()}
 						title="Go to current location"
 						icon="fa-solid fa-location-crosshairs"
 					/>
 					<Button
 						variant="icon"
 						size="sm"
-						on:click={handleClose}
+						onclick={() => handleClose()}
 						title="Close panel"
 						icon="fa-solid fa-times"
 					/>
@@ -113,7 +113,7 @@
 										<Button
 											variant="icon-blue"
 											size="sm"
-											on:click={() => focusOnSite(site)}
+											onclick={() => focusOnSite(site)}
 											title="Focus on site"
 											icon="fa-solid fa-location-dot"
 											iconColor="text-blue-600 dark:text-blue-500"
@@ -121,7 +121,7 @@
 										<Button
 											variant="icon-red"
 											size="sm"
-											on:click={() => deleteSite(site)}
+											onclick={() => deleteSite(site)}
 											title="Delete site"
 											icon="fa-solid fa-trash"
 											iconColor="text-red-600 dark:text-red-500"
