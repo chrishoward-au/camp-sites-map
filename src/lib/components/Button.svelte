@@ -9,7 +9,7 @@
   const type = props.type || 'button';
   const disabled = props.disabled || false;
   const title = props.title || '';
-  const className = props.className || '';
+  const classes = props.classes || '';
   const selected = props.selected || false;
   const icon = props.icon || '';
   const iconColor = props.iconColor || 'icon';
@@ -54,18 +54,25 @@
 		lg: 'w-10 h-10'
 	};
 
-	const classes = $derived(`${baseClasses} 
+	const classSet = $derived(`${baseClasses} 
     ${variantClasses[variant]}
     ${!['menu', 'route-start', 'route-end'].includes(variant) ? (variant === 'icon' ? iconSizeClasses[size] : sizeClasses[size]) : ''}
     ${fullWidth ? 'w-full' : ''}
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-    ${className}
+    ${classes}
     ${selected ? 'btn-active' : ''}
 `);
 console.log(onClick)
 </script>
 
-<button {type} {disabled} {title} class={classes} onclick={() => onClick()}>
+<button 
+  {type} 
+  {disabled} 
+  {title} 
+  class={classSet} 
+  onclick={() => onClick()}
+  aria-label={type + ' ' + title}
+  >
 
 	{#if icon && iconPosition === 'left'}
 		<i class={`${icon} ${selected ? iconSelectedColor : iconColor}`}></i>
