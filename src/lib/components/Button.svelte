@@ -11,6 +11,7 @@
   export let title = '';
   export let className = '';
   export let selected = false;
+  export let transparent = false;
   
   const baseClasses = 'btn inline-flex items-center justify-center transition-colors duration-200 focus:outline-none';
   
@@ -47,6 +48,7 @@
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
     ${className}
     ${selected ? 'btn-active' : ''}
+    ${transparent ? 'btn-transparent' : ''}
   `;
 </script>
 

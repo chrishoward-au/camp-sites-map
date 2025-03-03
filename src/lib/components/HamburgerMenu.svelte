@@ -47,6 +47,7 @@
       on:click={gotoCurrentLocation}
       title="Go to current location"
       icon="fa-solid fa-location-crosshairs"
+      transparent={true}
     />
     <Button
       variant="menu"
@@ -54,6 +55,7 @@
       title="Manage sites"
       icon="fa-solid fa-list"
       selected={false}
+      transparent={true}
     />
     <Button
       variant="menu"
@@ -61,6 +63,7 @@
       title="Switch Map Layer"
       icon="fa-solid fa-{mapType}"
       selected={false}
+      transparent={true}
     />
     <Button
       variant="menu"
@@ -68,6 +71,7 @@
       title={`${showTemperatures ? 'Hide' : 'Show'} Location Temperatures`}
       icon="fa-solid fa-cloud-sun"
       selected={showTemperatures}
+      transparent={true}
     />
     <Button
       variant="menu"
@@ -75,6 +79,7 @@
       title="Settings"
       icon="fa-solid fa-gear"
       selected={false}
+      transparent={true}
     />
   </ButtonGroup>
 </Dock>

@@ -4,6 +4,8 @@
     
   export let isOpen = false;
 
+  $: currentTheme = $settings.app.theme;
+
   function handleClose() {
     isOpen = false;
   }
@@ -35,6 +37,7 @@
         size="sm"
         icon="fa-solid fa-times"
         on:click={handleClose}
+        transparent={true}
       />
     </div>
 
@@ -49,18 +52,24 @@
               size="sm"
               icon="fa-solid fa-sun"
               on:click={() => settings.changeTheme('light')}
+              transparent={true}
+              selected={currentTheme === 'light'}
             />
             <Button
               variant="icon"
               size="sm"
               icon="fa-solid fa-moon"
               on:click={() => settings.changeTheme('dark')}
+              transparent={true}
+              selected={currentTheme === 'dark'}
             />
             <Button
               variant="icon"
               size="sm"
               icon="fa-solid fa-desktop"
               on:click={() => settings.changeTheme('system')}
+              transparent={true}
+              selected={currentTheme === 'system'}
             />
           </div>
         </div>

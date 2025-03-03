@@ -145,10 +145,14 @@ textarea.site-input {
 /* GLOBAL STYLES */
 
 .btn {
-    @apply bg-transparent border-0 
+    @apply border-0 
+    bg-blue-500
     text-base-content dark:text-base-100 
     hover:bg-primary hover:text-white
     disabled:cursor-not-allowed disabled:opacity-50
+}
+.btn-transparent {
+    @apply bg-transparent;
 }
 
 .btn-active {
