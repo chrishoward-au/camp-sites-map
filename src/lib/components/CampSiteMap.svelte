@@ -158,8 +158,8 @@
 				<input type="text" id="site-title" placeholder="Site Title" class="site-input dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
 				<textarea id="site-description" placeholder="Site Description" class="site-input dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"></textarea>
 				<div class="popup-buttons">
-					<Button size="sm" class="confirm">Add Site</button>
-					<Button size="sm" class="cancel">Cancel</button>
+					<Button size="sm" id="confirm-add" class="confirm">Add Site</button>
+					<Button size="sm" id="cancel-add" class="cancel">Cancel</button>
 				</div>
 			</div>
 		`;

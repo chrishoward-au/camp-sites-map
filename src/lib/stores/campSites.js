@@ -66,6 +66,7 @@ function createCampSitesStore() {
 
             // Update local store immediately
             update(sites => [data, ...sites]);
+            console.log(data)
             return data;
         },
 
