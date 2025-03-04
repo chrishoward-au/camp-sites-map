@@ -43,34 +43,34 @@
 <Dock >
   <ButtonGroup> 
     <Button
-      variant="menu"
+      type="menu"
       onclick={() => gotoCurrentLocation()}
       title="Go to current location"
       icon="fa-solid fa-location-crosshairs"
     />
     <Button
-      variant="menu"
+      type="menu"
       onclick={() => handleManageSites()}
       title="Manage sites"
       icon="fa-solid fa-list"
       selected={false}
     />
     <Button
-      variant="menu"
+      type="menu"
       onclick={() => handleSwitchLayer()}
       title="Switch Map Layer"
       icon="fa-solid fa-{mapType}"
       selected={false}
     />
     <Button
-      variant="menu"
+      type="menu"
       onclick={() => handleTemperaturesLayer()}
       title={`${showTemperatures ? 'Hide' : 'Show'} Location Temperatures`}
       icon="fa-solid fa-cloud-sun"
       selected={showTemperatures}
     />
     <Button
-      variant="menu"
+      type="menu"
       onclick={() => handleSettings()}
       title="Settings"
       icon="fa-solid fa-gear"

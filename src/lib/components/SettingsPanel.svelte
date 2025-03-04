@@ -33,7 +33,7 @@
       border-gray-200 dark:border-gray-600">
       <h2 class="text-md font-semibold">Settings</h2>
       <Button
-        variant="icon"
+        type="icon"
         size="sm"
         icon="fa-solid fa-times"
         onclick={() => handleClose()}
@@ -48,7 +48,7 @@
           <h3 class="font-medium text-gray-700 dark:text-gray-300">Theme</h3>
           <div class="theme-button-bar">
             <Button
-              variant="icon"
+              type="icon"
               size="sm"
               icon="fa-solid fa-sun"
               onclick={() => settings.changeTheme('light')}
@@ -56,7 +56,7 @@
               selected={currentTheme === 'light'}
             />
             <Button
-              variant="icon"
+              type="icon"
               size="sm"
               icon="fa-solid fa-moon"
               onclick={() => settings.changeTheme('dark')}
@@ -64,7 +64,7 @@
               selected={currentTheme === 'dark'}
             />
             <Button
-              variant="icon"
+              type="icon"
               size="sm"
               icon="fa-solid fa-desktop"
               onclick={() => settings.changeTheme('system')}

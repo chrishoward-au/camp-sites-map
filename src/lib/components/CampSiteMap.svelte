@@ -158,8 +158,8 @@
 				<input type="text" id="site-title" placeholder="Site Title" class="site-input dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
 				<textarea id="site-description" placeholder="Site Description" class="site-input dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"></textarea>
 				<div class="popup-buttons">
-					<Button size="sm" id="confirm-add" class="confirm">Add Site</button>
-					<Button size="sm" id="cancel-add" class="cancel">Cancel</button>
+					<button size="sm" id="confirm-add" class="confirm">Add Site</button>
+					<button size="sm" id="cancel-add" class="cancel">Cancel</button>
 				</div>
 			</div>
 		`;
@@ -279,7 +279,7 @@
 					target: routeButtonContainer,
 					props: {
 						size: 'sm',
-						variant: 'primary',
+						type: 'primary',
 						class: 'route-btn',
 						id: `route-action-btn-${site.id}`
 					},

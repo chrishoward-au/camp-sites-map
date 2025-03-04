@@ -71,14 +71,14 @@
 				<h2 class="text-md font-semibold text-gray-800 dark:text-gray-200">Camp Sites</h2>
 				<div class="flex items-center space-x-2">
 					<Button
-						variant="icon"
+						type="icon"
 						size="sm"
 						onclick={()=>gotoCurrentLocation()}
 						title="Go to current location"
 						icon="fa-solid fa-location-crosshairs"
 					/>
 					<Button
-						variant="icon"
+						type="icon"
 						size="sm"
 						onclick={() => handleClose()}
 						title="Close panel"
@@ -111,7 +111,7 @@
 									</div>
 									<div class="flex items-center space-x-2">
 										<Button
-											variant="icon-blue"
+											type="icon-blue"
 											size="sm"
 											onclick={() => focusOnSite(site)}
 											title="Focus on site"
@@ -119,7 +119,7 @@
 											iconColor="text-blue-600 dark:text-blue-500"
 											/>
 										<Button
-											variant="icon-red"
+											type="icon-red"
 											size="sm"
 											onclick={() => deleteSite(site)}
 											title="Delete site"

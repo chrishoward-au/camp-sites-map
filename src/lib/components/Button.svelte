@@ -6,22 +6,21 @@
   
 	//console.log('props:', {variant, size, disabled, type, icon, iconColor, iconSelectedColor, iconPosition, fullWidth, title, className, selected, transparent});
 
-  const type = props.type || 'button';
-  const disabled = props.disabled || false;
-  const title = props.title || '';
-  const classes = props.classes || '';
-  const selected = props.selected || false;
-  const icon = props.icon || '';
-  const iconColor = props.iconColor || 'icon';
-  const iconSelectedColor = props.iconSelectedColor || 'icon selected';
-  const iconPosition = props.iconPosition || 'left';
-  const fullWidth = props.fullWidth || false;
-  const size = props.size || 'sm';
-  const variant = props.variant || 'default';
-  const onClick = props.onclick || function() {};
-  const children: Snippet | undefined = props.children;
+  let disabled = $derived(props.disabled || false);
+  let title = $derived(props.title || '');
+  let classes = $derived(props.classes || '');
+  let selected = $derived(props.selected || false);
+  let icon = $derived(props.icon || '');
+  let iconColor = $derived(props.iconColor || 'icon');
+  let iconSelectedColor = $derived(props.iconSelectedColor || 'icon selected');
+  let iconPosition = $derived(props.iconPosition || 'left');
+  let fullWidth = $derived(props.fullWidth || false);
+  let size = $derived(props.size || 'sm');
+  let type = $derived(props.type || 'default');
+  let onClick = $derived(props.onclick || function() {});
+  let children: Snippet | undefined = $derived(props.children);
 
-  console.log(type, title);
+//  console.log(type, title);
   console.log('Button props:', props);
 
 
@@ -55,18 +54,17 @@
 	};
 
 	const classSet = $derived(`${baseClasses} 
-    ${variantClasses[variant]}
-    ${!['menu', 'route-start', 'route-end'].includes(variant) ? (variant === 'icon' ? iconSizeClasses[size] : sizeClasses[size]) : ''}
+    ${variantClasses[type]}
+    ${!['menu', 'route-start', 'route-end'].includes(type) ? (type === 'icon' ? iconSizeClasses[size] : sizeClasses[size]) : ''}
     ${fullWidth ? 'w-full' : ''}
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
     ${classes}
     ${selected ? 'btn-active' : ''}
 `);
-console.log(onClick)
+// console.log(onClick)
 </script>
 
 <button 
-  {type} 
   {disabled} 
   {title} 
   class={classSet} 
@@ -78,7 +76,7 @@ console.log(onClick)
 		<i class={`${icon} ${selected ? iconSelectedColor : iconColor}`}></i>
 	{/if}
 
-	{#if variant !== 'icon'}
+	{#if type !== 'icon'}
       {@render children?.()}
 	{/if}
 
