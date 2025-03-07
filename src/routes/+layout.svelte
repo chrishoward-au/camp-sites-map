@@ -3,6 +3,9 @@
   import { settings } from '$lib/stores/settings';
   import "../app.css";
   import 'mapbox-gl/dist/mapbox-gl.css';
+  import { injectAnalytics } from '@vercel/analytics/sveltekit'
+  
+  injectAnalytics()
 
 
   let { children } = $props();

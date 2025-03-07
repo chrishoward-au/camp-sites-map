@@ -14,7 +14,8 @@ export default defineConfig({
         server: {
             deps: {
                 inline: [/^@supabase\/supabase-js/]
-            }
+            },
+            port: 5174
         },
         deps: {
             optimizer: {
