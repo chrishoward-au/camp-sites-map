@@ -2,14 +2,14 @@
 
 A modern web application for exploring and discovering camp sites, built with Svelte and Mapbox.
 
-This is a side project built for personal learning and use.
+##### *This is a side project built for personal learning and use.*
 
 ## Features
 
-- Interactive map with camp site locations
-- Detailed camp site information
-- Search and filtering capabilities
-- Responsive design
+* Interactive map with camp site locations
+* Detailed camp site information
+* Search and filtering capabilities
+* Responsive design
 
 ## Installation
 
@@ -20,22 +20,21 @@ This is a side project built for personal learning and use.
 
 ## Configuration
 
-- Set up your Mapbox access token in `.env`
-- Customize Tailwind CSS in `tailwind.config.js`
+* Set up your Mapbox access token in `.env`
+* Customize Tailwind CSS in `tailwind.config.js`
 
 ## Usage
 
-- Search for camp sites using the search bar
-- Click on map markers for more information
-- Use filters to narrow down results
+* Search for camp sites using the search bar
+* Click on map markers for more information
+* Use filters to narrow down results
 
 ## Technologies Used
 
-- Svelte 5
-- Tailwind CSS 4
-- Mapbox GL JS
-- Vite
-
+* Svelte 5
+* Tailwind CSS 4
+* Mapbox GL JS
+* Vite
 
 ## License
 
